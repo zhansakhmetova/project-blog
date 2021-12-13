@@ -1,0 +1,58 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: ./docker
+      dockerfile: nginx.docker
+    ports:
+      - "${NGINX_OUTER_PORT}:80"
+    links:
+      - php-fpm
+    volumes:
+      - ./docker/nginx:/etc/nginx/conf.d
+      - ./:/var/www:cached
+  php-fpm:
+    build:
+      context: ./docker
+      dockerfile: php-fpm.docker
+    volumes:
+      - ./:/var/www/
+  php-cli:
+    build:
+      context: ./docker
+      dockerfile: php-cli.docker
+    volumes:
+      - ./:/var/www/
+    working_dir: /var/www
+    tty: true
+  redis:
+    image: redis:4.0.14-alpine
+    volumes:
+      - ./storage/docker/redis:/data
+    ports:
+      - "${REDIS_OUTER_PORT}:6379"
+  postgres:
+    image: postgres:11
+    volumes:
+      - postgres_database:/var/lib/postgresql/data:Z
+      - ./console/runtime/docker/dump.sql:/dump.sql
+    environment:
+      - "POSTGRES_USER=admin"
+      - "POSTGRES_PASSWORD=secret"
+      - "POSTGRES_DB=postgres"
+    ports:
+      - "${POSTGRES_OUTER_PORT}:5432"
+    tty: true
+  ch-server:
+    image: yandex/clickhouse-server
+    volumes:
+      - ./storage/clickhouse:/var/lib/clickhouse:cached
+    ports:
+      - "${CH_SERVER_OUTER_PORT_1}:8123"
+      - "${CH_SERVER_OUTER_PORT_2}:9000"
+      - "${CH_SERVER_OUTER_PORT_3}:9009"
+  ch-client:
+    image: yandex/clickhouse-client
+    command: ['--host', 'server']
+volumes:
+  postgres_database:
