@@ -33,6 +33,8 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
+
+
     public static function tableName()
     {
         return '{{%user}}';
