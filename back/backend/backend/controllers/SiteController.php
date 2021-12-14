@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\LoginForm;
+use common\models\User;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -46,7 +47,6 @@ class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
-
     public function actions()
     {
         return [

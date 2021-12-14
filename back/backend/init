@@ -77,7 +77,7 @@ foreach ($files as $file) {
         break;
     }
 }
-//some comment
+
 $filesToRemove = [];
 $skipFiles = !empty($env['skipFiles']) ? $env['skipFiles'] : [];
 foreach(array_column($envs, 'path') as $envPath) {
