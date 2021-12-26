@@ -1,0 +1,5 @@
+FROM nginx:latest
+
+ADD ./nginx/admin.conf /etc/nginx/conf.d/admin.conf
+
+WORKDIR /var/www
